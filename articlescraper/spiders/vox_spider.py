@@ -7,6 +7,12 @@ class VoxSpider(scrapy.Spider):
     name = "vox"
     start_urls = [
         'https://www.vox.com/culture/archives',
+        'https://www.vox.com/politics/archives',
+        'https://www.vox.com/science/archives',
+        'https://www.vox.com/technology/archives',
+        'https://www.vox.com/climate/archives',
+        'https://www.vox.com/health/archives',
+        'https://www.vox.com/money/archives'
     ]
 
     def parse(self, response):
@@ -18,7 +24,7 @@ class VoxSpider(scrapy.Spider):
             contentPage.cb_kwargs['heading'] = newsItem.css(
                 'h2.c-entry-box--compact__title a::text').get()
             contentPage.cb_kwargs['author'] = newsItem.css(
-                'span.c-byline__author-name::text')
+                'span.c-byline__author-name::text').get()
             contentPage.cb_kwargs['publish_date'] = newsItem.css(
                 'time::text').get()
             contentPage.cb_kwargs['overview'] = ""
@@ -37,5 +43,5 @@ class VoxSpider(scrapy.Spider):
             'publish_date': publish_date,
             'overview': overview,
             'link': link,
-            'content': response.css('div.c-entry-content p::text').getall()
+            'content': response.css('div.c-entry-content > p::text').getall()
         }
