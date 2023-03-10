@@ -12,7 +12,7 @@ class QuotesSpider(scrapy.Spider):
     def parse(self, response):
         for newsItem in response.css('div.cartHolder'):
             href = newsItem.css('h3 a::attr(href)').get()
-            contentPage = scrapy.Request(
+            contentPage = response.follow(
                 href, callback=self.parse_inside, cb_kwargs=dict())
             contentPage.cb_kwargs['heading'] = newsItem.css(
                 'h3.hdg3 a::text').get()
@@ -27,7 +27,7 @@ class QuotesSpider(scrapy.Spider):
             nextPage = response.css(
                 'li.next a::attr(href)').get()
             if nextPage is not None:
-                yield scrapy.Request(nextPage, callback=self.parse)
+                yield response.follow(nextPage, callback=self.parse)
 
     def parse_inside(self, response, heading, author, publish_date, overview, link):
         yield {

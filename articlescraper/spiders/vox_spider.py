@@ -13,7 +13,7 @@ class VoxSpider(scrapy.Spider):
         for newsItem in response.css('div.c-compact-river__entry'):
             href = newsItem.css(
                 'h2.c-entry-box--compact__title a::attr(href)').get()
-            contentPage = scrapy.Request(
+            contentPage = response.follow(
                 href, callback=self.parse_inside, cb_kwargs=dict())
             contentPage.cb_kwargs['heading'] = newsItem.css(
                 'h2.c-entry-box--compact__title a::text').get()
@@ -28,7 +28,7 @@ class VoxSpider(scrapy.Spider):
             nextPage = response.css(
                 'nav.c-pagination a.c-pagination__next::attr(href)').get()
             if nextPage is not None:
-                yield scrapy.Request(nextPage, callback=self.parse)
+                yield response.follow(nextPage, callback=self.parse)
 
     def parse_inside(self, response, heading, author, publish_date, overview, link):
         yield {
