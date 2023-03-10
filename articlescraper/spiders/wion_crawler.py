@@ -3,7 +3,7 @@ from pathlib import Path
 import scrapy
 
 
-class QuotesSpider(scrapy.Spider):
+class WionSpider(scrapy.Spider):
     name = "wion"
     start_urls = [
         'https://www.wionews.com/india-news',
