@@ -3,7 +3,7 @@ from pathlib import Path
 import scrapy
 
 
-class QuotesSpider(scrapy.Spider):
+class NdtvSpider(scrapy.Spider):
     name = "ndtv"
     start_urls = [
         'https://www.ndtv.com/education',
