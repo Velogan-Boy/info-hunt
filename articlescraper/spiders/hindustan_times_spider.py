@@ -24,10 +24,10 @@ class QuotesSpider(scrapy.Spider):
             contentPage.cb_kwargs['link'] = newsItem.css(
                 'h3.hdg3 a::attr(href)').get()
             yield contentPage
-            nextPage = response.css(
-                'li.next a::attr(href)').get()
-            if nextPage is not None:
-                yield scrapy.Request(nextPage, callback=self.parse)
+        nextPage = response.css(
+            'li.next a::attr(href)').get()
+        if nextPage is not None:
+            yield scrapy.Request(nextPage, callback=self.parse)
 
     def parse_inside(self, response, heading, author, publish_date, overview, link):
         yield {

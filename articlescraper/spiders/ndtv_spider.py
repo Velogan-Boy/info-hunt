@@ -30,10 +30,10 @@ class NdtvSpider(scrapy.Spider):
                 'h2.newsHdng a::attr(href)').get()
 
             yield contentPage
-            nextPage = response.css(
-                'div.listng_pagntn span + a::attr(href)').get()
-            if nextPage is not None:
-                yield scrapy.Request(nextPage, callback=self.parse)
+        nextPage = response.css(
+            'div.listng_pagntn span + a::attr(href)').get()
+        if nextPage is not None:
+            yield scrapy.Request(nextPage, callback=self.parse)
 
     def parse_inside(self, response, heading, author, publish_date, overview, link):
         yield {

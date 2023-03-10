@@ -28,10 +28,10 @@ class IndianExpSpider(scrapy.Spider):
             contentPage.cb_kwargs['link'] = newsItem.css(
                 'h2.title a::attr(href)').get()
             yield contentPage
-            nextPage = response.css(
-                'ul.page-numbers a.next::attr(href)').get()
-            if nextPage is not None:
-                yield scrapy.Request(nextPage, callback=self.parse)
+        nextPage = response.css(
+            'ul.page-numbers a.next::attr(href)').get()
+        if nextPage is not None:
+            yield scrapy.Request(nextPage, callback=self.parse)
 
     def parse_inside(self, response, heading, author, publish_date, overview, link):
         yield {
