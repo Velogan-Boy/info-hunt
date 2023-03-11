@@ -16,6 +16,9 @@ class NdtvSpider(scrapy.Spider):
     def parse(self, response):
         for newsItem in response.css('div.news_Itm'):
             href = newsItem.css('h2.newsHdng a::attr(href)').get()
+            yield from self.downloader(response, newsItem, href)
+
+    def downloader(self, response, newsItem, href):
             contentPage = response.follow(
                 href, callback=self.parse_inside, cb_kwargs=dict())
             contentPage.cb_kwargs['heading'] = newsItem.css(
@@ -28,8 +31,10 @@ class NdtvSpider(scrapy.Spider):
                 'p.newsCont::text').get()
             contentPage.cb_kwargs['link'] = newsItem.css(
                 'h2.newsHdng a::attr(href)').get()
-
             yield contentPage
+            yield from self.navigator(response)
+
+    def navigator(self, response):
             nextPage = response.css(
                 'div.listng_pagntn span + a::attr(href)').get()
             if nextPage is not None:

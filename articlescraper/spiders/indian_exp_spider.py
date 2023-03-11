@@ -16,8 +16,11 @@ class IndianExpSpider(scrapy.Spider):
     def parse(self, response):
         for newsItem in response.css('div.articles'):
             href = newsItem.css('h2 a::attr(href)').get()
+            yield from self.downloader(response, newsItem, href)
+
+    def downloader(self, response, newsItem, href):
             contentPage = response.follow(
-                href, callback=self.parse_inside, cb_kwargs=dict())
+                href, callback=self.extractor, cb_kwargs=dict())
             contentPage.cb_kwargs['heading'] = newsItem.css(
                 'h2.title a::text').get()
             contentPage.cb_kwargs['author'] = ""
@@ -28,12 +31,15 @@ class IndianExpSpider(scrapy.Spider):
             contentPage.cb_kwargs['link'] = newsItem.css(
                 'h2.title a::attr(href)').get()
             yield contentPage
+            yield from self.navigator(response)
+
+    def navigator(self, response):
             nextPage = response.css(
                 'ul.page-numbers a.next::attr(href)').get()
             if nextPage is not None:
                 yield response.follow(nextPage, callback=self.parse)
 
-    def parse_inside(self, response, heading, author, publish_date, overview, link):
+    def extractor(self, response, heading, author, publish_date, overview, link):
         yield {
             'heading': heading,
             'author': author,

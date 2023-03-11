@@ -19,6 +19,9 @@ class VoxSpider(scrapy.Spider):
         for newsItem in response.css('div.c-compact-river__entry'):
             href = newsItem.css(
                 'h2.c-entry-box--compact__title a::attr(href)').get()
+            yield from self.downloader(response, newsItem, href)
+
+    def downloader(self, response, newsItem, href):
             contentPage = response.follow(
                 href, callback=self.parse_inside, cb_kwargs=dict())
             contentPage.cb_kwargs['heading'] = newsItem.css(
@@ -31,6 +34,9 @@ class VoxSpider(scrapy.Spider):
             contentPage.cb_kwargs['link'] = newsItem.css(
                 'h2.c-entry-box--compact__title a::attr(href)').get()
             yield contentPage
+            yield from self.navigator(response)
+
+    def navigator(self, response):
             nextPage = response.css(
                 'nav.c-pagination a.c-pagination__next::attr(href)').get()
             if nextPage is not None:
