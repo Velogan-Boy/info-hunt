@@ -1,8 +1,13 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import json
 from flask import Flask, render_template, Response, request
 
 from preprocessing import query_processing
 from preprocessing import load_articles
+
+
 
 
 app = Flask(__name__)
