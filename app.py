@@ -1,13 +1,10 @@
-import warnings
-warnings.filterwarnings("ignore")
-
-import json
-from flask import Flask, render_template, Response, request
-
-from preprocessing import query_processing
 from preprocessing import load_articles
+from preprocessing import query_processing
+from flask import Flask, render_template, Response, request
+import json
+import warnings
 
-
+warnings.filterwarnings("ignore", category=UserWarning)
 
 
 app = Flask(__name__)
@@ -33,7 +30,7 @@ def search():
 
 
 if __name__ == '__main__':
-    
+
     #  Production
     from waitress import serve
     serve(app, host="0.0.0.0", port=8080)
